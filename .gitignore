@@ -1,0 +1,7 @@
+bin/
+*.exe
+*.o
+*.obj
+node_modules/
+.DS_Store
+Thumbs.db
