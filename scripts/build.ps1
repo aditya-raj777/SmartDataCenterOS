@@ -19,7 +19,8 @@ $CoreSources = @(
     "src/synchronization/Threading.cpp",
     "src/synchronization/ConcurrencyDemo.cpp",
     "src/synchronization/ResourceManager.cpp",
-    "src/simulation/SimulationEngine.cpp"
+    "src/simulation/SimulationEngine.cpp",
+    "src/deadlock/DeadlockDetector.cpp"
 ) | ForEach-Object { Join-Path $Root $_ }
 
 $IncDir = Join-Path $Root "include"

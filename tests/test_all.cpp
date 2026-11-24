@@ -6,6 +6,7 @@
 #include "core/Types.h"
 #include "cpu/CpuScheduler.h"
 #include "cpu/CpuSimulator.h"
+#include "deadlock/DeadlockDetector.h"
 #include "disk/DiskSimulator.h"
 #include "memory/MemoryManager.h"
 #include "memory/MemorySimulator.h"
@@ -300,6 +301,39 @@ void testIntegratedEngine() {
     }
 }
 
+void testDeadlockDetection() {
+    // 1. Two-process circular wait must detect deadlock
+    {
+        std::vector<DeadlockNode> nodes;
+        DeadlockNode p1; p1.pid = 1; p1.name = "P1"; p1.holding = {"R1"}; p1.waiting = {"R2"};
+        DeadlockNode p2; p2.pid = 2; p2.name = "P2"; p2.holding = {"R2"}; p2.waiting = {"R1"};
+        nodes.push_back(p1);
+        nodes.push_back(p2);
+
+        DeadlockResult r = DeadlockDetector::detectFromScenario(nodes);
+        check(r.hasDeadlock, "DeadlockDetector identifies 2-process circular wait");
+        check(r.cycle.size() >= 2, "DeadlockDetector cycle contains participating PIDs");
+    }
+
+    // 2. Acyclic graph must report no deadlock
+    {
+        std::vector<DeadlockNode> nodes;
+        DeadlockNode p1; p1.pid = 1; p1.name = "P1"; p1.holding = {"R1"}; p1.waiting = {"R2"};
+        DeadlockNode p2; p2.pid = 2; p2.name = "P2"; p2.holding = {"R2"}; p2.waiting = {};
+        nodes.push_back(p1);
+        nodes.push_back(p2);
+
+        DeadlockResult r = DeadlockDetector::detectFromScenario(nodes);
+        check(!r.hasDeadlock, "DeadlockDetector correctly reports acyclic graph as safe");
+    }
+
+    // 3. Preset scenarios must load properly
+    {
+        Json presets = DeadlockDetector::presetScenarios();
+        check(presets.size() == 4, "DeadlockDetector defines 4 preset scenarios");
+    }
+}
+
 } // namespace
 
 int main() {
@@ -308,9 +342,10 @@ int main() {
     testDiskScheduling();
     testSynchronization();
     testIntegratedEngine();
+    testDeadlockDetection();
 
     std::cout << "========================================\n";
-    std::cout << "Smart Data Center OS Simulator Test Suite\n";
+    std::cout << "DataCenterOS Simulation Engine Test Suite\n";
     std::cout << "Passed: " << gPassed << " | Failed: " << gFailed << "\n";
     std::cout << "========================================\n";
     return gFailed == 0 ? 0 : 1;

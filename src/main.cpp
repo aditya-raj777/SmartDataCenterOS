@@ -6,6 +6,7 @@
 #include "core/Types.h"
 #include "cpu/CpuScheduler.h"
 #include "cpu/CpuSimulator.h"
+#include "deadlock/DeadlockDetector.h"
 #include "disk/DiskSimulator.h"
 #include "memory/MemorySimulator.h"
 #include "process/Process.h"
@@ -174,6 +175,31 @@ Json handleRequest(const Json& req) {
         cfg.consumers = req.getInt("consumers", 2);
         cfg.traceLimit = req.getInt("traceLimit", 400);
         resp["data"] = ConcurrencyDemo::run(cfg);
+        return resp;
+    }
+
+    if (cmd == "DEADLOCK_DETECT") {
+        std::vector<DeadlockNode> nodes;
+        if (req.has("scenario") && req["scenario"].isArray()) {
+            for (const auto& nj : req["scenario"].items()) {
+                DeadlockNode n;
+                n.pid = nj.getInt("pid", 0);
+                n.name = nj.getStr("name", "P" + std::to_string(n.pid));
+                if (nj.has("holding") && nj["holding"].isArray()) {
+                    for (const auto& r : nj["holding"].items()) n.holding.push_back(r.asString());
+                }
+                if (nj.has("waiting") && nj["waiting"].isArray()) {
+                    for (const auto& r : nj["waiting"].items()) n.waiting.push_back(r.asString());
+                }
+                nodes.push_back(n);
+            }
+        }
+        resp["data"] = DeadlockDetector::detectFromScenario(nodes).toJson();
+        return resp;
+    }
+
+    if (cmd == "DEADLOCK_SCENARIOS") {
+        resp["data"] = DeadlockDetector::presetScenarios();
         return resp;
     }
 

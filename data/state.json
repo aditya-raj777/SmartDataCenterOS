@@ -1,0 +1,178 @@
+{
+  "servers": [
+    {
+      "id": "srv-web-01",
+      "name": "Production-Web-01",
+      "type": "Application Gateway",
+      "status": "running",
+      "cpu": {
+        "cores": 8,
+        "utilization": 24.5
+      },
+      "ram": {
+        "total": 16384,
+        "used": 6420
+      },
+      "storage": {
+        "total": 500,
+        "used": 142
+      },
+      "processes": [
+        1,
+        2
+      ],
+      "createdAt": 1795271737327,
+      "uptime": 259200,
+      "ipAddress": "10.0.1.14",
+      "region": "us-east-1a"
+    },
+    {
+      "id": "srv-db-primary",
+      "name": "Database-Primary",
+      "type": "Relational DB Cluster",
+      "status": "running",
+      "cpu": {
+        "cores": 16,
+        "utilization": 48.2
+      },
+      "ram": {
+        "total": 32768,
+        "used": 21540
+      },
+      "storage": {
+        "total": 2000,
+        "used": 840
+      },
+      "processes": [
+        3,
+        4
+      ],
+      "createdAt": 1794926137327,
+      "uptime": 604800,
+      "ipAddress": "10.0.2.22",
+      "region": "us-east-1b"
+    },
+    {
+      "id": "srv-ml-compute",
+      "name": "ML-Inference-Node",
+      "type": "GPU / Tensor Compute",
+      "status": "stopped",
+      "cpu": {
+        "cores": 32,
+        "utilization": 0
+      },
+      "ram": {
+        "total": 65536,
+        "used": 0
+      },
+      "storage": {
+        "total": 4000,
+        "used": 620
+      },
+      "processes": [],
+      "createdAt": 1795444537327,
+      "uptime": 0,
+      "ipAddress": "10.0.3.50",
+      "region": "us-east-1c"
+    },
+    {
+      "id": "srv-mwusscpc-b2198b",
+      "name": "Worker-Test-99",
+      "type": "Standard Compute Node",
+      "status": "running",
+      "cpu": {
+        "cores": 4,
+        "utilization": 0
+      },
+      "ram": {
+        "total": 8192,
+        "used": 0
+      },
+      "storage": {
+        "total": 200,
+        "used": 0
+      },
+      "processes": [],
+      "createdAt": 1795530982224,
+      "uptime": 0,
+      "ipAddress": "10.0.2.35",
+      "region": "us-east-1a"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "inc-001",
+      "title": "High Disk I/O Queue Depth on Database-Primary",
+      "severity": "warning",
+      "status": "active",
+      "server": "Database-Primary",
+      "serverId": "srv-db-primary",
+      "description": "Sustained cylinder queue depth exceeded 12 operations during concurrent batch snapshot writes.",
+      "createdAt": 1795523737327,
+      "resolvedAt": null,
+      "resolution": null
+    },
+    {
+      "id": "inc-002",
+      "title": "Elevated Memory Fragmentation in Kernel Pool",
+      "severity": "info",
+      "status": "resolved",
+      "server": "Production-Web-01",
+      "serverId": "srv-web-01",
+      "description": "Dynamic partition allocation resulted in 128KB external fragmentation hole. Compacted automatically.",
+      "createdAt": 1795480537327,
+      "resolvedAt": 1795487737327,
+      "resolution": "First-fit allocation compaction cycle completed without process eviction."
+    }
+  ],
+  "events": [
+    {
+      "id": "ev-mwusslpc-aa833b",
+      "timestamp": 1795530993888,
+      "type": "SIMULATION",
+      "source": "SIM-ENGINE",
+      "message": "Completed integrated simulation (9 ticks, 2 jobs)",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwusscvv-f79bef",
+      "timestamp": 1795530982460,
+      "type": "DEADLOCK",
+      "source": "DEADLOCK-DETECTOR",
+      "message": "Deadlock detected: Circular wait detected across processes: P1 -> P2 -> P1",
+      "severity": "critical"
+    },
+    {
+      "id": "ev-mwusscpc-0b792a",
+      "timestamp": 1795530982224,
+      "type": "SERVER",
+      "source": "srv-mwusscpc-b2198b",
+      "message": "Provisioned virtual server Worker-Test-99 (4 cores, 8192MB RAM)",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwusre27-06752a",
+      "timestamp": 1795530937327,
+      "type": "SERVER",
+      "source": "srv-db-primary",
+      "message": "Virtual Server Database-Primary online [10.0.2.22]",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwusre27-1670ca",
+      "timestamp": 1795530937327,
+      "type": "SERVER",
+      "source": "srv-web-01",
+      "message": "Virtual Server Production-Web-01 online [10.0.1.14]",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwusre27-9f6e1d",
+      "timestamp": 1795530937327,
+      "type": "SYSTEM",
+      "source": "SYS-KERNEL",
+      "message": "DataCenterOS Enterprise Platform initialized",
+      "severity": "info"
+    }
+  ]
+}

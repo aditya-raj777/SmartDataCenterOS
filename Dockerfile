@@ -22,6 +22,7 @@ RUN mkdir -p /build/bin && \
       src/synchronization/ConcurrencyDemo.cpp \
       src/synchronization/ResourceManager.cpp \
       src/simulation/SimulationEngine.cpp \
+      src/deadlock/DeadlockDetector.cpp \
       src/main.cpp -o /build/bin/dc_sim && \
     g++ -std=c++14 -O2 -Wall -Wextra -pthread -Iinclude \
       src/core/Json.cpp \
@@ -38,6 +39,7 @@ RUN mkdir -p /build/bin && \
       src/synchronization/ConcurrencyDemo.cpp \
       src/synchronization/ResourceManager.cpp \
       src/simulation/SimulationEngine.cpp \
+      src/deadlock/DeadlockDetector.cpp \
       tests/test_all.cpp -o /build/bin/dc_tests && \
     /build/bin/dc_tests
 

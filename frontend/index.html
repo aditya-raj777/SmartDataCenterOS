@@ -3,64 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Data Center OS Simulator — Interactive OS Resource Management Lab</title>
+  <title>DataCenterOS — Virtual Infrastructure Management &amp; OS Simulation Platform</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/vendor/chart.umd.js"></script>
 </head>
 <body>
-  <!-- Sidebar Navigation -->
+  <!-- ==================== SIDEBAR NAVIGATION ==================== -->
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-icon">OS</div>
+      <div class="brand-icon">DC</div>
       <div>
-        <div class="brand-title">Smart Data Center</div>
-        <div class="brand-sub">OS Resource Lab v1.0</div>
+        <div class="brand-title">DataCenterOS</div>
+        <div class="brand-sub">Infrastructure &amp; OS Platform v2.0</div>
       </div>
     </div>
 
-    <div class="nav-section">Monitoring &amp; Control</div>
-    <button class="nav-item active" data-view="overview"><span class="nav-dot"></span>Overview &amp; Engine</button>
-    <button class="nav-item" data-view="processes"><span class="nav-dot"></span>Process Manager</button>
+    <div class="nav-section">Infrastructure Fleet</div>
+    <button class="nav-item active" data-view="overview"><span class="nav-dot"></span>Overview Dashboard</button>
+    <button class="nav-item" data-view="servers"><span class="nav-dot"></span>Server Fleet</button>
 
-    <div class="nav-section">OS Subsystems</div>
-    <button class="nav-item" data-view="cpu"><span class="nav-dot"></span>CPU Scheduling</button>
-    <button class="nav-item" data-view="memory"><span class="nav-dot"></span>Memory Manager</button>
-    <button class="nav-item" data-view="disk"><span class="nav-dot"></span>Disk Scheduling</button>
-    <button class="nav-item" data-view="sync"><span class="nav-dot"></span>Synchronization</button>
+    <div class="nav-section">OS Operations</div>
+    <button class="nav-item" data-view="processes"><span class="nav-dot"></span>Process Control Center</button>
+    <button class="nav-item" data-view="cpu"><span class="nav-dot"></span>CPU Monitoring &amp; Sched</button>
+    <button class="nav-item" data-view="memory"><span class="nav-dot"></span>Memory Management</button>
+    <button class="nav-item" data-view="disk"><span class="nav-dot"></span>Storage &amp; Disk I/O</button>
 
-    <div class="nav-section">Analysis</div>
-    <button class="nav-item" data-view="compare"><span class="nav-dot"></span>Comparison Lab</button>
+    <div class="nav-section">Concurrency &amp; Safety</div>
+    <button class="nav-item" data-view="sync"><span class="nav-dot"></span>Synchronization Lab</button>
+    <button class="nav-item" data-view="deadlock"><span class="nav-dot"></span>Deadlock Manager</button>
+
+    <div class="nav-section">Intelligence &amp; Labs</div>
+    <button class="nav-item" data-view="scenarios"><span class="nav-dot"></span>Scenario Lab</button>
+    <button class="nav-item" data-view="monitoring"><span class="nav-dot"></span>Incidents &amp; Health</button>
+    <button class="nav-item" data-view="analytics"><span class="nav-dot"></span>Benchmarking Analytics</button>
+    <button class="nav-item" data-view="logs"><span class="nav-dot"></span>System Event Logs</button>
 
     <div class="sidebar-footer">
-      <div id="engine-status" class="engine-pill"><span class="pulse"></span>Connecting C++ Engine...</div>
-      <div id="engine-backend" style="font-size:10.5px;line-height:1.35;">Checking threading backend...</div>
+      <div id="engine-status" class="engine-pill"><span class="pulse"></span>Connecting C++ Core...</div>
+      <div id="engine-backend" style="font-size:10.5px;line-height:1.35;color:var(--text-muted);">Verifying engine backend...</div>
+      <div id="platform-status-pill" style="margin-top:8px;font-size:11px;color:var(--emerald);display:flex;align-items:center;gap:6px;">
+        <span class="status-dot healthy"></span>System Health: <b id="sidebar-health-text">OPTIMAL</b>
+      </div>
     </div>
   </aside>
 
-  <!-- Main Workspace -->
+  <!-- ==================== MAIN WORKSPACE ==================== -->
   <div class="main">
     <!-- Global Simulation Control Bar -->
     <header class="topbar">
       <div class="topbar-group">
-        <button id="btn-sim-run" class="btn btn-primary">▶ Start Simulation</button>
+        <button id="btn-sim-run" class="btn btn-primary">▶ Run Simulation</button>
         <button id="btn-sim-pause" class="btn" disabled>⏸ Pause</button>
-        <button id="btn-sim-step" class="btn">⏭ Next Step</button>
+        <button id="btn-sim-step" class="btn">⏭ Step</button>
         <button id="btn-sim-reset" class="btn">↺ Reset</button>
         <span id="sim-clock" class="clock-badge">t = 0 / 0</span>
         <input id="sim-scrubber" class="scrubber" type="range" min="0" max="0" value="0" title="Scrub simulation timeline" />
       </div>
 
       <div class="topbar-group">
-        <label style="font-size:11.5px;color:var(--text-secondary);">Speed
-          <select id="sim-speed" style="padding:4px 8px;margin-left:4px;">
+        <label style="font-size:11.5px;color:var(--text-secondary);display:flex;align-items:center;gap:4px;">Speed
+          <select id="sim-speed" style="padding:4px 8px;">
             <option value="900">0.5x</option>
-            <option value="450" selected>1x</option>
+            <option value="450" selected>1.0x</option>
             <option value="180">2.5x</option>
-            <option value="60">6x</option>
+            <option value="60">6.0x</option>
           </select>
         </label>
         <select id="sample-select" style="padding:5px 9px;">
-          <option value="">Load Sample Workload...</option>
+          <option value="">Load Workload Preset...</option>
         </select>
         <button id="btn-random-workload" class="btn">🎲 Random</button>
         <button id="btn-export-report" class="btn">⬇ Export JSON</button>
@@ -68,12 +78,24 @@
     </header>
 
     <main class="content">
-      <!-- ==================== 1. OVERVIEW & INTEGRATED ENGINE ==================== -->
+      <!-- ==================== 1. OVERVIEW DASHBOARD ==================== -->
       <section id="view-overview" class="view active">
+        <!-- Health Alert Bar -->
+        <div id="overview-health-bar" class="health-bar healthy">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="status-dot healthy" id="health-bar-dot"></span>
+            <div>
+              <b id="health-bar-title">Data Center Fleet Status: Normal Operations</b>
+              <div id="health-bar-sub" style="font-size:11.5px;color:var(--text-secondary);margin-top:1px;">All virtual servers online, zero critical lock deadlocks detected, scheduler throughput stable.</div>
+            </div>
+          </div>
+          <span class="badge badge-RUNNING" id="health-bar-badge">HEALTHY</span>
+        </div>
+
         <div class="view-header">
           <div>
-            <h1>Integrated Data Center Telemetry</h1>
-            <p>Real-time discrete-event OS simulation driven by the C++14 engine: Lifecycle → Memory → CPU → Disk I/O → Synchronization.</p>
+            <h1>Infrastructure &amp; OS Telemetry Overview</h1>
+            <p>Unified real-time cluster telemetry driven by native C++14 simulation kernel and enterprise node monitor.</p>
           </div>
           <div class="form-row" style="margin:0;">
             <div class="field"><label>CPU Policy</label>
@@ -109,63 +131,62 @@
           </div>
         </div>
 
-        <!-- Dynamic KPI Cards -->
+        <!-- Infrastructure & Simulation KPI Cards -->
         <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-label">Total Jobs</div><div id="kpi-total" class="kpi-value">0</div><div id="kpi-new-sub" class="kpi-sub">0 NEW</div></div>
-          <div class="kpi-card emerald"><div class="kpi-label">Running</div><div id="kpi-running" class="kpi-value">0</div><div id="kpi-running-name" class="kpi-sub">CPU Idle</div></div>
-          <div class="kpi-card cyan"><div class="kpi-label">Ready Queue</div><div id="kpi-ready" class="kpi-value">0</div><div class="kpi-sub">Waiting for CPU</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Waiting</div><div id="kpi-waiting" class="kpi-value">0</div><div class="kpi-sub">I/O or Lock</div></div>
-          <div class="kpi-card violet"><div class="kpi-label">Completed</div><div id="kpi-completed" class="kpi-value">0</div><div id="kpi-failed-sub" class="kpi-sub">0 failed</div></div>
-          <div class="kpi-card cyan"><div class="kpi-label">CPU Utilization</div><div id="kpi-cpu-util" class="kpi-value">0%</div><div id="kpi-ctx-sub" class="kpi-sub">0 ctx switches</div></div>
+          <div class="kpi-card cyan"><div class="kpi-label">Virtual Servers</div><div id="kpi-srv-total" class="kpi-value">3</div><div id="kpi-srv-sub" class="kpi-sub">2 Active · 1 Offline</div></div>
+          <div class="kpi-card emerald"><div class="kpi-label">Active Processes</div><div id="kpi-running" class="kpi-value">0</div><div id="kpi-running-name" class="kpi-sub">CPU Idle</div></div>
+          <div class="kpi-card"><div class="kpi-label">Ready Queue</div><div id="kpi-ready" class="kpi-value">0</div><div class="kpi-sub">Awaiting CPU dispatch</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Waiting Queue</div><div id="kpi-waiting" class="kpi-value">0</div><div class="kpi-sub">I/O or Lock wait</div></div>
+          <div class="kpi-card violet"><div class="kpi-label">Completed Jobs</div><div id="kpi-completed" class="kpi-value">0</div><div id="kpi-failed-sub" class="kpi-sub">0 failed</div></div>
+          <div class="kpi-card cyan"><div class="kpi-label">CPU Utilization</div><div id="kpi-cpu-util" class="kpi-value">0%</div><div id="kpi-ctx-sub" class="kpi-sub">0 context switches</div></div>
           <div class="kpi-card emerald"><div class="kpi-label">Memory Util</div><div id="kpi-mem-util" class="kpi-value">0%</div><div id="kpi-mem-sub" class="kpi-sub">0 / 1024 KB</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Disk Seek</div><div id="kpi-disk-move" class="kpi-value">0</div><div id="kpi-disk-sub" class="kpi-sub">Head @ 53</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Disk Movement</div><div id="kpi-disk-move" class="kpi-value">0</div><div id="kpi-disk-sub" class="kpi-sub">Head @ 53</div></div>
           <div class="kpi-card rose"><div class="kpi-label">Resource Conflicts</div><div id="kpi-conflicts" class="kpi-value">0</div><div class="kpi-sub">Lock contentions</div></div>
+          <div class="kpi-card"><div class="kpi-label">Active Incidents</div><div id="kpi-incidents-active" class="kpi-value" style="color:var(--amber);">1</div><div class="kpi-sub" id="kpi-incidents-sub">1 warning</div></div>
         </div>
 
-        <!-- Integrated CPU Gantt Chart -->
+        <!-- Integrated CPU Gantt Timeline -->
         <div class="panel">
           <div class="panel-head">
             <div class="panel-title">CPU Execution Timeline (Integrated Gantt Chart)</div>
-            <div id="overview-gantt-meta" class="panel-subtitle">Run simulation to inspect live intervals</div>
+            <div id="overview-gantt-meta" class="panel-subtitle">Run simulation to visualize live CPU dispatch intervals</div>
           </div>
           <div id="overview-gantt" class="gantt-wrap"></div>
         </div>
 
+        <!-- Live Memory & Shared Resources Grid -->
         <div class="grid-2">
-          <!-- Live Memory Map -->
           <div class="panel">
             <div class="panel-head">
-              <div class="panel-title">Live Main Memory Map</div>
+              <div class="panel-title">Live Main Memory Allocation Map</div>
               <div id="overview-mem-meta" class="panel-subtitle">0 KB used · 0 ext frag</div>
             </div>
             <div id="overview-mem-bar" class="mem-bar"></div>
             <div id="overview-mem-legend" style="font-size:11.5px;color:var(--text-secondary);margin-top:6px;"></div>
           </div>
 
-          <!-- Shared Resources Panel -->
           <div class="panel">
             <div class="panel-head">
-              <div class="panel-title">Shared Resources &amp; Locks</div>
-              <div class="panel-subtitle">Mutexes &amp; Semaphores</div>
+              <div class="panel-title">Shared Resources &amp; Mutex Locks</div>
+              <div class="panel-subtitle">Mutexes &amp; Semaphores In Use</div>
             </div>
             <div id="overview-resources" class="res-grid"></div>
           </div>
         </div>
 
+        <!-- Live Event Log & Telemetry Chart Grid -->
         <div class="grid-2">
-          <!-- Live Event Log -->
           <div class="panel">
             <div class="panel-head">
-              <div class="panel-title">Live OS Event Log</div>
+              <div class="panel-title">Live OS Event Stream</div>
               <div id="overview-event-count" class="panel-subtitle">0 events</div>
             </div>
             <div id="overview-events" class="event-log"></div>
           </div>
 
-          <!-- Performance Telemetry Chart -->
           <div class="panel">
             <div class="panel-head">
-              <div class="panel-title">Utilization Telemetry (CPU &amp; Memory %)</div>
+              <div class="panel-title">Resource Utilization Telemetry (CPU &amp; Memory %)</div>
               <div id="overview-perf-summary" class="panel-subtitle"></div>
             </div>
             <div class="chart-box"><canvas id="chart-overview-telemetry"></canvas></div>
@@ -173,12 +194,61 @@
         </div>
       </section>
 
-      <!-- ==================== 2. PROCESS MANAGEMENT ==================== -->
+      <!-- ==================== 2. SERVER FLEET MANAGEMENT ==================== -->
+      <section id="view-servers" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Virtual Server Fleet Management</h1>
+            <p>Provision, configure, scale, and simulate fault recovery across high-availability data center compute nodes.</p>
+          </div>
+          <div class="topbar-group">
+            <button id="btn-toggle-server-form" class="btn btn-primary">+ Provision New Server</button>
+            <button id="btn-refresh-servers" class="btn">↻ Refresh Fleet</button>
+          </div>
+        </div>
+
+        <!-- Provision Server Panel (Collapsible) -->
+        <div id="server-form-panel" class="panel" style="display:none;border-color:var(--cyan);">
+          <div class="panel-head">
+            <div class="panel-title">Provision Virtual Server Instance</div>
+            <div class="panel-subtitle">Allocate compute cores, RAM buffer, and persistent block volume</div>
+          </div>
+          <form id="server-form" class="form-row">
+            <div class="field"><label>Server Name</label><input id="srv-name" type="text" placeholder="e.g. Worker-Compute-04" required /></div>
+            <div class="field"><label>Role / Type</label>
+              <select id="srv-type">
+                <option value="Application Gateway">Application Gateway</option>
+                <option value="Relational DB Cluster">Relational DB Cluster</option>
+                <option value="GPU / Tensor Compute">GPU / Tensor Compute</option>
+                <option value="Microservice Worker">Microservice Worker</option>
+                <option value="Cache &amp; Storage Node">Cache &amp; Storage Node</option>
+              </select>
+            </div>
+            <div class="field" style="min-width:90px;"><label>CPU Cores</label><input id="srv-cores" type="number" min="1" max="128" value="8" required /></div>
+            <div class="field" style="min-width:110px;"><label>RAM (MB)</label><input id="srv-ram" type="number" min="1024" max="262144" step="1024" value="16384" required /></div>
+            <div class="field" style="min-width:110px;"><label>Storage (GB)</label><input id="srv-storage" type="number" min="50" max="10000" step="50" value="500" required /></div>
+            <div class="field"><label>Availability Zone</label>
+              <select id="srv-region">
+                <option value="us-east-1a">us-east-1a (Primary)</option>
+                <option value="us-east-1b">us-east-1b (Backup)</option>
+                <option value="us-east-1c">us-east-1c (High-Memory)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">✓ Deploy Instance</button>
+            <button type="button" id="btn-cancel-server-form" class="btn">Cancel</button>
+          </form>
+        </div>
+
+        <!-- Server Grid -->
+        <div id="server-grid" class="server-grid"></div>
+      </section>
+
+      <!-- ==================== 3. PROCESS CONTROL CENTER ==================== -->
       <section id="view-processes" class="view">
         <div class="view-header">
           <div>
-            <h1>Process &amp; Job Manager</h1>
-            <p>Submit, edit, batch-generate, or import CSV jobs. Each process transitions through NEW → READY → RUNNING → WAITING → TERMINATED.</p>
+            <h1>Process &amp; Job Control Center</h1>
+            <p>Process Control Block (PCB) lifecycle engine: NEW → READY → RUNNING → WAITING → TERMINATED with multi-server affinity.</p>
           </div>
           <div class="topbar-group">
             <label class="btn">📂 Import CSV<input id="csv-import-input" type="file" accept=".csv,.txt" style="display:none;" /></label>
@@ -191,28 +261,33 @@
         <!-- Job Form -->
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title" id="job-form-title">Create New Process</div>
-            <div class="panel-subtitle">Leave Burst Spec blank to auto-build from CPU / Disk I/O / Resources</div>
+            <div class="panel-title" id="job-form-title">Create Process Task</div>
+            <div class="panel-subtitle">Specify arrival, execution burst, memory requirement, and optional lock dependencies</div>
           </div>
           <form id="job-form" class="form-row">
             <input type="hidden" id="job-edit-pid" value="" />
             <div class="field"><label>Name</label><input id="job-name" type="text" placeholder="e.g. api-worker" required /></div>
-            <div class="field" style="min-width:80px;"><label>Arrival</label><input id="job-arrival" type="number" min="0" value="0" style="width:82px;" required /></div>
+            <div class="field" style="min-width:75px;"><label>Arrival</label><input id="job-arrival" type="number" min="0" value="0" style="width:75px;" required /></div>
             <div class="field" style="min-width:85px;"><label>CPU Burst</label><input id="job-cpu" type="number" min="1" value="5" style="width:85px;" required /></div>
-            <div class="field" style="min-width:80px;"><label>Priority</label><input id="job-priority" type="number" min="1" max="20" value="2" style="width:80px;" required /></div>
+            <div class="field" style="min-width:75px;"><label>Priority</label><input id="job-priority" type="number" min="1" max="20" value="2" style="width:75px;" required /></div>
             <div class="field" style="min-width:95px;"><label>Memory (KB)</label><input id="job-memory" type="number" min="0" value="128" style="width:95px;" required /></div>
-            <div class="field" style="min-width:130px;"><label>Disk I/O Cyls</label><input id="job-io" type="text" placeholder="e.g. 45, 120" style="width:130px;" /></div>
-            <div class="field" style="min-width:140px;"><label>Resources</label><input id="job-res" type="text" placeholder="DB_LOCK, LOG_FILE" style="width:145px;" /></div>
-            <div class="field" style="flex:1;min-width:170px;"><label>Optional Burst Spec</label><input id="job-spec" type="text" placeholder="e.g. C2 I2@98 C2[DB_LOCK]" /></div>
-            <button type="submit" id="job-submit-btn" class="btn btn-primary">+ Add Job</button>
+            <div class="field"><label>Server Affinity</label>
+              <select id="job-server-select" style="min-width:140px;">
+                <option value="">Auto-Assign</option>
+              </select>
+            </div>
+            <div class="field" style="min-width:120px;"><label>Disk Cylinders</label><input id="job-io" type="text" placeholder="e.g. 45, 120" style="width:120px;" /></div>
+            <div class="field" style="min-width:130px;"><label>Resource Locks</label><input id="job-res" type="text" placeholder="DB_LOCK, LOG_FILE" style="width:130px;" /></div>
+            <div class="field" style="flex:1;min-width:160px;"><label>Burst Spec (Optional)</label><input id="job-spec" type="text" placeholder="e.g. C2 I2@98 C2[DB_LOCK]" /></div>
+            <button type="submit" id="job-submit-btn" class="btn btn-primary">+ Add Process</button>
             <button type="button" id="job-cancel-edit" class="btn" style="display:none;">Cancel</button>
           </form>
         </div>
 
-        <!-- State Filters + Process Table -->
+        <!-- PCB State Filters & Table -->
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">Process Control Block Table</div>
+            <div class="panel-title">Active Process Control Blocks (PCB Table)</div>
             <div id="state-filters" class="topbar-group">
               <button class="pill active" data-state="ALL">ALL</button>
               <button class="pill" data-state="NEW">NEW</button>
@@ -226,8 +301,8 @@
             <table>
               <thead>
                 <tr>
-                  <th>PID</th><th>Name</th><th>Arrival</th><th>CPU Burst</th><th>Priority</th><th>Memory</th>
-                  <th>Burst Sequence</th><th>State</th><th>Remaining</th><th>Wait</th><th>TAT</th><th>Resp</th><th>Actions</th>
+                  <th>PID</th><th>Process</th><th>Server</th><th>Arrival</th><th>Burst</th><th>Prio</th><th>Memory</th>
+                  <th>Sequence</th><th>State</th><th>Remaining</th><th>Wait</th><th>TAT</th><th>Resp</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody id="process-tbody"></tbody>
@@ -236,12 +311,12 @@
         </div>
       </section>
 
-      <!-- ==================== 3. CPU SCHEDULING LAB ==================== -->
+      <!-- ==================== 4. CPU SCHEDULING ==================== -->
       <section id="view-cpu" class="view">
         <div class="view-header">
           <div>
-            <h1>CPU Scheduling Laboratory</h1>
-            <p>Run standalone C++ CPU schedulers on your current workload and step through ready-queue decisions.</p>
+            <h1>CPU Monitoring &amp; Scheduling Laboratory</h1>
+            <p>Execute standalone OS CPU dispatch algorithms on the current workload: FCFS, SJF, SRTF, Priority (NP/P), Round Robin.</p>
           </div>
         </div>
 
@@ -271,15 +346,15 @@
         <div class="kpi-grid" id="cpu-kpis"></div>
 
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Interactive Gantt Chart</div><div class="panel-subtitle">Hover over any interval for exact start/end times</div></div>
+          <div class="panel-head"><div class="panel-title">Interactive CPU Gantt Chart</div><div class="panel-subtitle">Hover over any time interval for exact execution windows</div></div>
           <div id="cpu-gantt" class="gantt-wrap"></div>
         </div>
 
         <div class="grid-2">
-          <!-- Interactive Algorithm Walkthrough -->
+          <!-- Step-by-Step Algorithm Walkthrough -->
           <div class="panel">
             <div class="panel-head">
-              <div class="panel-title">Interactive Algorithm Walkthrough</div>
+              <div class="panel-title">Scheduler Decision Walkthrough</div>
               <div class="topbar-group">
                 <button id="btn-walk-prev" class="btn btn-sm">◀ Prev</button>
                 <span id="walk-counter" class="clock-badge" style="font-size:11px;">Step 0 / 0</span>
@@ -289,9 +364,9 @@
             <div id="cpu-walkthrough-body"></div>
           </div>
 
-          <!-- Per-process timing table -->
+          <!-- Per-Process Metrics Table -->
           <div class="panel">
-            <div class="panel-head"><div class="panel-title">Per-Process Metrics</div></div>
+            <div class="panel-head"><div class="panel-title">Per-Process Performance Metrics</div></div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>PID</th><th>Name</th><th>Arr</th><th>Burst</th><th>Prio</th><th>Start</th><th>Comp</th><th>Wait</th><th>TAT</th><th>Resp</th></tr></thead>
@@ -302,12 +377,12 @@
         </div>
       </section>
 
-      <!-- ==================== 4. MEMORY MANAGEMENT LAB ==================== -->
+      <!-- ==================== 5. MEMORY MANAGEMENT ==================== -->
       <section id="view-memory" class="view">
         <div class="view-header">
           <div>
-            <h1>Memory Management Laboratory</h1>
-            <p>Contiguous dynamic &amp; fixed partitioning with First Fit, Best Fit, Worst Fit, and Next Fit.</p>
+            <h1>Memory Management Center</h1>
+            <p>Contiguous memory partition allocator: First Fit, Best Fit, Worst Fit, Next Fit with fragmentation analysis.</p>
           </div>
         </div>
 
@@ -321,7 +396,7 @@
                 <option value="NEXT_FIT">Next Fit</option>
               </select>
             </div>
-            <div class="field"><label>Mode</label>
+            <div class="field"><label>Partitioning Mode</label>
               <select id="mem-mode">
                 <option value="DYNAMIC">Dynamic Partitioning</option>
                 <option value="FIXED">Fixed Partitions</option>
@@ -329,7 +404,7 @@
             </div>
             <div class="field"><label>Total Memory (KB)</label><input id="mem-total" type="number" min="64" max="8192" value="512" style="width:110px;" /></div>
             <div class="field" id="mem-parts-field" style="display:none;min-width:220px;"><label>Fixed Partitions (CSV)</label><input id="mem-partitions" type="text" value="100, 200, 150, 250, 300" /></div>
-            <button id="btn-mem-run" class="btn btn-primary">▶ Run Memory Lab</button>
+            <button id="btn-mem-run" class="btn btn-primary">▶ Run Memory Allocator</button>
           </div>
         </div>
 
@@ -337,7 +412,7 @@
 
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">Step-by-Step Visual Memory Map</div>
+            <div class="panel-title">Step-by-Step Allocation &amp; Deallocation Map</div>
             <div class="topbar-group">
               <button id="btn-mem-prev" class="btn btn-sm">◀ Prev</button>
               <span id="mem-step-badge" class="clock-badge" style="font-size:11px;">Step 0 / 0</span>
@@ -350,12 +425,12 @@
         </div>
       </section>
 
-      <!-- ==================== 5. DISK SCHEDULING LAB ==================== -->
+      <!-- ==================== 6. DISK STORAGE ==================== -->
       <section id="view-disk" class="view">
         <div class="view-header">
           <div>
-            <h1>Disk Scheduling Laboratory</h1>
-            <p>Animated cylinder-head movement visualization for FCFS, SSTF, SCAN, C-SCAN, LOOK, and C-LOOK.</p>
+            <h1>Storage &amp; Disk I/O Management</h1>
+            <p>Animated disk platter head movement &amp; seek scheduling: FCFS, SSTF, SCAN, C-SCAN, LOOK, C-LOOK.</p>
           </div>
         </div>
 
@@ -386,7 +461,7 @@
 
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">Animated Disk-Head Track</div>
+            <div class="panel-title">Animated Cylinder Head Trajectory</div>
             <div class="topbar-group">
               <button id="btn-disk-play" class="btn btn-sm btn-success">▶ Replay</button>
               <button id="btn-disk-step" class="btn btn-sm">⏭ Step</button>
@@ -398,12 +473,12 @@
         </div>
       </section>
 
-      <!-- ==================== 6. SYNCHRONIZATION LAB ==================== -->
+      <!-- ==================== 7. SYNCHRONIZATION LAB ==================== -->
       <section id="view-sync" class="view">
         <div class="view-header">
           <div>
-            <h1>Process Synchronization &amp; Real Multithreading Lab</h1>
-            <p>Spawns actual OS threads in the C++ engine to demonstrate race conditions, mutual exclusion, counting semaphores, and bounded buffers.</p>
+            <h1>Process Synchronization &amp; Native Multithreading</h1>
+            <p>Executes actual native threads in the C++ engine to benchmark race conditions, mutex critical sections, semaphores, and producer-consumer buffers.</p>
           </div>
         </div>
 
@@ -430,33 +505,199 @@
 
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">Thread Interleaving Trace (Real C++ Execution)</div>
+            <div class="panel-title">Thread Interleaving Trace (Native Execution Log)</div>
             <div id="sync-trace-meta" class="panel-subtitle">Run a demo to inspect real thread events</div>
           </div>
           <div id="sync-trace-log" class="event-log" style="max-height:260px;"></div>
         </div>
       </section>
 
-      <!-- ==================== 7. ALGORITHM COMPARISON LAB ==================== -->
-      <section id="view-compare" class="view">
+      <!-- ==================== 8. DEADLOCK MANAGEMENT ==================== -->
+      <section id="view-deadlock" class="view">
         <div class="view-header">
           <div>
-            <h1>Algorithm Comparison Laboratory</h1>
-            <p>Independently runs every algorithm in C++ on the identical workload and highlights best metrics alongside tradeoffs.</p>
+            <h1>Deadlock Detection &amp; Resource Allocation Graph (RAG)</h1>
+            <p>Wait-For Graph cycle detection, Resource Allocation Graph visualizer, circular wait resolution, and Banker's safety verification.</p>
           </div>
-          <button id="btn-compare-run" class="btn btn-primary">▶ Run Comparison</button>
+          <div class="topbar-group">
+            <select id="deadlock-scenario-select" style="min-width:260px;">
+              <option value="">Load Deadlock Scenario...</option>
+            </select>
+            <button id="btn-load-deadlock-preset" class="btn">Load Scenario</button>
+            <button id="btn-deadlock-detect" class="btn btn-primary">🔍 Detect Deadlock</button>
+          </div>
+        </div>
+
+        <!-- Deadlock Status Banner -->
+        <div id="deadlock-status-banner" class="health-bar healthy" style="display:none;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="status-dot healthy" id="deadlock-status-dot"></span>
+            <div>
+              <b id="deadlock-status-title">RAG Analysis Result</b>
+              <div id="deadlock-status-desc" style="font-size:12px;margin-top:2px;"></div>
+            </div>
+          </div>
+          <span class="badge" id="deadlock-status-badge">READY</span>
+        </div>
+
+        <div class="grid-2">
+          <!-- Custom Process-Resource Builder -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Resource Allocation Matrix</div>
+              <div class="panel-subtitle">Define processes, held resources, and requested locks</div>
+            </div>
+            <form id="deadlock-add-form" class="form-row">
+              <div class="field"><label>PID</label><input id="dl-pid" type="number" min="1" value="1" style="width:65px;" required /></div>
+              <div class="field"><label>Process Name</label><input id="dl-name" type="text" placeholder="worker-1" style="width:120px;" required /></div>
+              <div class="field" style="flex:1;"><label>Holding (CSV)</label><input id="dl-holding" type="text" placeholder="DB_LOCK, R1" /></div>
+              <div class="field" style="flex:1;"><label>Waiting For (CSV)</label><input id="dl-waiting" type="text" placeholder="LOG_FILE, R2" /></div>
+              <button type="submit" class="btn btn-primary">+ Add</button>
+              <button type="button" id="btn-clear-deadlock-nodes" class="btn btn-danger">Clear</button>
+            </form>
+            <div class="table-wrap" style="max-height:260px;overflow-y:auto;margin-top:10px;">
+              <table>
+                <thead><tr><th>PID</th><th>Name</th><th>Holding</th><th>Waiting For</th><th>Action</th></tr></thead>
+                <tbody id="deadlock-nodes-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RAG Graph Visualization Canvas -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Visual Resource Allocation Graph (RAG)</div>
+              <div class="panel-subtitle">Circles = Processes · Squares = Resources · Red = Deadlock Cycle</div>
+            </div>
+            <canvas id="rag-canvas" class="disk-canvas" width="600" height="320" style="height:320px;"></canvas>
+            <div id="rag-legend" style="display:flex;gap:14px;margin-top:8px;font-size:11.5px;color:var(--text-secondary);flex-wrap:wrap;">
+              <span><span style="color:var(--cyan);font-weight:bold;">●</span> Process Node</span>
+              <span><span style="color:var(--amber);font-weight:bold;">■</span> Resource Node</span>
+              <span><span style="color:var(--emerald);font-weight:bold;">→</span> Holding Edge</span>
+              <span><span style="color:var(--rose);font-weight:bold;">⇢</span> Request Edge</span>
+              <span><span style="color:var(--rose);font-weight:bold;">⚡</span> Deadlock Cycle</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recovery Panel -->
+        <div id="deadlock-recovery-panel" class="panel" style="display:none;border-color:rgba(251,113,133,0.5);">
+          <div class="panel-head">
+            <div class="panel-title" style="color:var(--rose);">Deadlock Recovery Strategy</div>
+            <div class="panel-subtitle">Select victim process to terminate or force-release held locks to break cycle</div>
+          </div>
+          <div id="deadlock-recovery-actions" style="display:flex;gap:10px;flex-wrap:wrap;"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 9. SCENARIO LAB ==================== -->
+      <section id="view-scenarios" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Scenario Lab &amp; Stress Testing</h1>
+            <p>Pre-packaged data center failure modes, load spikes, and resource starvation stress tests.</p>
+          </div>
+        </div>
+        <div id="scenario-grid" class="scenario-grid"></div>
+
+        <div id="scenario-run-panel" class="panel" style="display:none;margin-top:18px;">
+          <div class="panel-head">
+            <div class="panel-title" id="scenario-run-title">Scenario Output Results</div>
+            <div class="panel-subtitle" id="scenario-run-sub">Simulation completed</div>
+          </div>
+          <div id="scenario-run-kpis" class="kpi-grid"></div>
+          <div id="scenario-run-gantt" class="gantt-wrap"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 10. INCIDENTS & MONITORING ==================== -->
+      <section id="view-monitoring" class="view">
+        <div class="view-header">
+          <div>
+            <h1>System Monitoring &amp; Incident Management</h1>
+            <p>Infrastructure anomalies, hardware crash reports, lock contention alerts, and operational resolution tracking.</p>
+          </div>
+          <div class="topbar-group">
+            <button id="btn-toggle-incident-form" class="btn btn-primary">+ Report Incident</button>
+            <button id="btn-refresh-incidents" class="btn">↻ Refresh</button>
+          </div>
+        </div>
+
+        <!-- Incident KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card rose"><div class="kpi-label">Critical Incidents</div><div id="inc-kpi-critical" class="kpi-value">0</div><div class="kpi-sub">Immediate action required</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Active Warnings</div><div id="inc-kpi-warning" class="kpi-value">0</div><div class="kpi-sub">Elevated threshold alerts</div></div>
+          <div class="kpi-card cyan"><div class="kpi-label">Informational</div><div id="inc-kpi-info" class="kpi-value">0</div><div class="kpi-sub">System notices</div></div>
+          <div class="kpi-card emerald"><div class="kpi-label">Resolved Total</div><div id="inc-kpi-resolved" class="kpi-value">0</div><div class="kpi-sub">Mitigated events</div></div>
+        </div>
+
+        <!-- Report Incident Form (Collapsible) -->
+        <div id="incident-form-panel" class="panel" style="display:none;border-color:var(--amber);">
+          <div class="panel-head"><div class="panel-title">Log Infrastructure Incident</div></div>
+          <form id="incident-form" class="form-row">
+            <div class="field" style="flex:1;"><label>Incident Title</label><input id="inc-title" type="text" placeholder="e.g. Memory allocation failure on Worker-01" required /></div>
+            <div class="field"><label>Severity</label>
+              <select id="inc-severity">
+                <option value="warning">Warning</option>
+                <option value="critical">Critical</option>
+                <option value="info">Info</option>
+              </select>
+            </div>
+            <div class="field"><label>Affected Server</label>
+              <select id="inc-server-select" style="min-width:160px;"></select>
+            </div>
+            <div class="field" style="flex:2;min-width:240px;"><label>Description &amp; Root Cause</label><input id="inc-desc" type="text" placeholder="Detailed symptoms..." required /></div>
+            <button type="submit" class="btn btn-primary">Submit Alert</button>
+            <button type="button" id="btn-cancel-incident-form" class="btn">Cancel</button>
+          </form>
+        </div>
+
+        <!-- Incident Feed -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Incident Queue</div>
+            <div class="topbar-group">
+              <select id="inc-filter-status" style="padding:4px 8px;font-size:12px;">
+                <option value="all">All Statuses</option>
+                <option value="active" selected>Active Only</option>
+                <option value="resolved">Resolved Only</option>
+              </select>
+              <select id="inc-filter-sev" style="padding:4px 8px;font-size:12px;">
+                <option value="all">All Severities</option>
+                <option value="critical">Critical Only</option>
+                <option value="warning">Warning Only</option>
+                <option value="info">Info Only</option>
+              </select>
+            </div>
+          </div>
+          <div id="incident-list" class="incident-feed"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 11. BENCHMARKING ANALYTICS ==================== -->
+      <section id="view-analytics" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Operating System Benchmarking &amp; Analytics</h1>
+            <p>Head-to-head empirical comparison across all CPU schedulers, memory strategies, and disk movement algorithms.</p>
+          </div>
+          <div class="topbar-group">
+            <button id="btn-export-cmp-csv" class="btn">⬇ Export CSV</button>
+            <button id="btn-export-cmp-json" class="btn">⬇ Export JSON</button>
+            <button id="btn-compare-run" class="btn btn-primary">▶ Run Benchmark</button>
+          </div>
         </div>
 
         <div class="tabs">
-          <button class="tab-btn active" data-cmp="cpu">CPU Scheduling (6 Algos)</button>
-          <button class="tab-btn" data-cmp="memory">Memory Placement (4 Algos)</button>
-          <button class="tab-btn" data-cmp="disk">Disk Scheduling (6 Algos)</button>
+          <button class="tab-btn active" data-cmp="cpu">CPU Scheduling (6 Algorithms)</button>
+          <button class="tab-btn" data-cmp="memory">Memory Placement (4 Strategies)</button>
+          <button class="tab-btn" data-cmp="disk">Disk Scheduling (6 Algorithms)</button>
         </div>
 
         <div class="panel">
           <div class="panel-head">
-            <div id="cmp-table-title" class="panel-title">Comparison Results</div>
-            <div class="panel-subtitle">Green cells indicate best value for that metric — no single algorithm is universally optimal.</div>
+            <div id="cmp-table-title" class="panel-title">Benchmark Results Matrix</div>
+            <div class="panel-subtitle">Green cells highlight the mathematically optimal metric for the given workload.</div>
           </div>
           <div class="table-wrap" id="cmp-table-wrap"></div>
         </div>
@@ -474,10 +715,65 @@
 
         <div class="panel" id="cmp-analysis-box"></div>
       </section>
+
+      <!-- ==================== 12. SYSTEM EVENT LOGS ==================== -->
+      <section id="view-logs" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Centralized System Event Logs</h1>
+            <p>Auditable log repository tracking kernel dispatches, hardware alerts, memory compactions, and user operations.</p>
+          </div>
+          <div class="topbar-group">
+            <button id="btn-export-logs-csv" class="btn">⬇ Export Logs</button>
+            <button id="btn-refresh-logs" class="btn">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="form-row">
+            <div class="field"><label>Category</label>
+              <select id="log-filter-type">
+                <option value="all">All Categories</option>
+                <option value="SYSTEM">SYSTEM</option>
+                <option value="SERVER">SERVER</option>
+                <option value="SIMULATION">SIMULATION</option>
+                <option value="DEADLOCK">DEADLOCK</option>
+                <option value="INCIDENT">INCIDENT</option>
+              </select>
+            </div>
+            <div class="field"><label>Severity</label>
+              <select id="log-filter-sev">
+                <option value="all">All Severities</option>
+                <option value="critical">Critical</option>
+                <option value="warning">Warning</option>
+                <option value="info">Info</option>
+              </select>
+            </div>
+            <div class="field" style="flex:1;min-width:200px;"><label>Search Message</label>
+              <input id="log-search-input" type="text" placeholder="Filter by keyword..." />
+            </div>
+          </div>
+
+          <div class="table-wrap" style="max-height:480px;overflow-y:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:130px;">Timestamp</th>
+                  <th style="width:100px;">Type</th>
+                  <th style="width:120px;">Source</th>
+                  <th style="width:80px;">Severity</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="logs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
-  <!-- Global hover tooltip & toast -->
+  <!-- Global Tooltip & Notification Toast -->
   <div id="tooltip" class="tooltip"></div>
   <div id="toast" class="toast"></div>
 
