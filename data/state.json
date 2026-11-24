@@ -127,6 +127,30 @@
   ],
   "events": [
     {
+      "id": "ev-mwuyyy1p-724615",
+      "timestamp": 1795541367517,
+      "type": "SIMULATION",
+      "source": "SIM-ENGINE",
+      "message": "Completed integrated simulation (48 ticks, 8 jobs)",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwuyyvhd-86ebce",
+      "timestamp": 1795541364193,
+      "type": "SIMULATION",
+      "source": "SIM-ENGINE",
+      "message": "Completed integrated simulation (48 ticks, 8 jobs)",
+      "severity": "info"
+    },
+    {
+      "id": "ev-mwuyyrai-ab0030",
+      "timestamp": 1795541358763,
+      "type": "SIMULATION",
+      "source": "SIM-ENGINE",
+      "message": "Completed integrated simulation (48 ticks, 8 jobs)",
+      "severity": "info"
+    },
+    {
       "id": "ev-mwuxqjq6-8f68d8",
       "timestamp": 1795539296094,
       "type": "SIMULATION",
