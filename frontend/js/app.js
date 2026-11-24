@@ -367,6 +367,7 @@
     const offline = total - active;
     if ($('kpi-srv-total')) $('kpi-srv-total').textContent = total;
     if ($('kpi-srv-sub')) $('kpi-srv-sub').textContent = `${active} Active · ${offline} Offline`;
+    if ($('nav-count-servers')) $('nav-count-servers').textContent = total;
   }
 
   function renderServerGrid() {
@@ -491,6 +492,7 @@
   function renderProcessTable() {
     const tbody = $('process-tbody');
     if (!tbody) return;
+    if ($('nav-count-processes')) $('nav-count-processes').textContent = state.jobs.length;
     const snap = state.simResult?.timeline?.[state.tick];
     const snapMap = {};
     if (snap) snap.processes.forEach((p) => { snapMap[p.pid] = p; });
@@ -1286,6 +1288,7 @@
     if ($('inc-kpi-info')) $('inc-kpi-info').textContent = info;
     if ($('inc-kpi-resolved')) $('inc-kpi-resolved').textContent = resolved;
     if ($('kpi-incidents-active')) $('kpi-incidents-active').textContent = critical + warning;
+    if ($('nav-count-incidents')) $('nav-count-incidents').textContent = critical + warning;
   }
 
   function renderIncidentFeed() {

@@ -13,36 +13,36 @@
     <div class="brand">
       <div class="brand-icon">DC</div>
       <div>
-        <div class="brand-title">DataCenterOS</div>
-        <div class="brand-sub">Infrastructure &amp; OS Platform v2.0</div>
+        <div class="brand-title">DataCenterOS <span class="brand-tag">ENTERPRISE</span></div>
+        <div class="brand-sub">Virtual Infrastructure &amp; OS Core v2.0</div>
       </div>
     </div>
 
     <div class="nav-section">Infrastructure Fleet</div>
-    <button class="nav-item active" data-view="overview"><span class="nav-dot"></span>Overview Dashboard</button>
-    <button class="nav-item" data-view="servers"><span class="nav-dot"></span>Server Fleet</button>
+    <button class="nav-item active" data-view="overview"><div class="nav-item-left"><span class="nav-dot"></span>Overview Dashboard</div></button>
+    <button class="nav-item" data-view="servers"><div class="nav-item-left"><span class="nav-dot"></span>Server Fleet</div><span class="nav-counter" id="nav-count-servers">3</span></button>
 
     <div class="nav-section">OS Operations</div>
-    <button class="nav-item" data-view="processes"><span class="nav-dot"></span>Process Control Center</button>
-    <button class="nav-item" data-view="cpu"><span class="nav-dot"></span>CPU Monitoring &amp; Sched</button>
-    <button class="nav-item" data-view="memory"><span class="nav-dot"></span>Memory Management</button>
-    <button class="nav-item" data-view="disk"><span class="nav-dot"></span>Storage &amp; Disk I/O</button>
+    <button class="nav-item" data-view="processes"><div class="nav-item-left"><span class="nav-dot"></span>Process Control</div><span class="nav-counter" id="nav-count-processes">0</span></button>
+    <button class="nav-item" data-view="cpu"><div class="nav-item-left"><span class="nav-dot"></span>CPU Scheduling</div></button>
+    <button class="nav-item" data-view="memory"><div class="nav-item-left"><span class="nav-dot"></span>Memory Allocator</div></button>
+    <button class="nav-item" data-view="disk"><div class="nav-item-left"><span class="nav-dot"></span>Storage &amp; Disk I/O</div></button>
 
     <div class="nav-section">Concurrency &amp; Safety</div>
-    <button class="nav-item" data-view="sync"><span class="nav-dot"></span>Synchronization Lab</button>
-    <button class="nav-item" data-view="deadlock"><span class="nav-dot"></span>Deadlock Manager</button>
+    <button class="nav-item" data-view="sync"><div class="nav-item-left"><span class="nav-dot"></span>Synchronization Lab</div></button>
+    <button class="nav-item" data-view="deadlock"><div class="nav-item-left"><span class="nav-dot"></span>Deadlock Manager</div><span class="nav-counter" id="nav-count-deadlock">RAG</span></button>
 
     <div class="nav-section">Intelligence &amp; Labs</div>
-    <button class="nav-item" data-view="scenarios"><span class="nav-dot"></span>Scenario Lab</button>
-    <button class="nav-item" data-view="monitoring"><span class="nav-dot"></span>Incidents &amp; Health</button>
-    <button class="nav-item" data-view="analytics"><span class="nav-dot"></span>Benchmarking Analytics</button>
-    <button class="nav-item" data-view="logs"><span class="nav-dot"></span>System Event Logs</button>
+    <button class="nav-item" data-view="scenarios"><div class="nav-item-left"><span class="nav-dot"></span>Scenario Lab</div><span class="nav-counter" id="nav-count-scenarios">6</span></button>
+    <button class="nav-item" data-view="monitoring"><div class="nav-item-left"><span class="nav-dot"></span>Incidents &amp; Health</div><span class="nav-counter" id="nav-count-incidents">0</span></button>
+    <button class="nav-item" data-view="analytics"><div class="nav-item-left"><span class="nav-dot"></span>Benchmarking Matrix</div></button>
+    <button class="nav-item" data-view="logs"><div class="nav-item-left"><span class="nav-dot"></span>System Audit Logs</div></button>
 
     <div class="sidebar-footer">
       <div id="engine-status" class="engine-pill"><span class="pulse"></span>Connecting C++ Core...</div>
       <div id="engine-backend" style="font-size:10.5px;line-height:1.35;color:var(--text-muted);">Verifying engine backend...</div>
       <div id="platform-status-pill" style="margin-top:8px;font-size:11px;color:var(--emerald);display:flex;align-items:center;gap:6px;">
-        <span class="status-dot healthy"></span>System Health: <b id="sidebar-health-text">OPTIMAL</b>
+        <span class="status-dot healthy"></span>Cluster Status: <b id="sidebar-health-text">OPTIMAL</b>
       </div>
     </div>
   </aside>
@@ -52,6 +52,7 @@
     <!-- Global Simulation Control Bar -->
     <header class="topbar">
       <div class="topbar-group">
+        <span class="topbar-status-badge"><span class="status-dot healthy"></span><b>us-east-1</b> (Cluster-Prod)</span>
         <button id="btn-sim-run" class="btn btn-primary">▶ Run Simulation</button>
         <button id="btn-sim-pause" class="btn" disabled>⏸ Pause</button>
         <button id="btn-sim-step" class="btn">⏭ Step</button>
