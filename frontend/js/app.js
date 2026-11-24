@@ -44,10 +44,10 @@
   };
 
   const PALETTE = [
-    '#38bdf8', '#34d399', '#a78bfa', '#fbbf24', '#fb7185',
-    '#2dd4bf', '#818cf8', '#f97316', '#4ade80', '#e879f9', '#60a5fa', '#facc15'
+    '#0f62fe', '#198038', '#6929c4', '#b28600', '#da1e28',
+    '#007d79', '#fa4d56', '#1192e8', '#a56eff', '#005d5d', '#ba4e00', '#002d9c'
   ];
-  const colorForPid = (pid) => pid < 0 ? '#1e293b' : PALETTE[(pid - 1) % PALETTE.length];
+  const colorForPid = (pid) => pid < 0 ? '#8d8d8d' : PALETTE[(pid - 1) % PALETTE.length];
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -100,25 +100,37 @@
   }
 
   // ----------------------------------------------------------------- Navigation
-  document.querySelectorAll('.nav-item').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach((b) => b.classList.remove('active'));
-      document.querySelectorAll('.view').forEach((v) => v.classList.remove('active'));
-      btn.classList.add('active');
-      const v = btn.dataset.view;
-      const targetView = $('view-' + v);
-      if (targetView) targetView.classList.add('active');
+  function navigateToView(v) {
+    if (!v) return;
+    const navBtn = document.querySelector(`.nav-item[data-view="${v}"]`);
+    document.querySelectorAll('.nav-item').forEach((b) => b.classList.remove('active'));
+    if (navBtn) navBtn.classList.add('active');
 
-      if (v === 'servers') loadServers();
-      if (v === 'monitoring') loadIncidents();
-      if (v === 'logs') loadLogs();
-      if (v === 'scenarios') loadScenarios();
-      if (v === 'deadlock') renderDeadlockUI();
-      if (v === 'compare' && !state.cmpLoaded) runComparison();
-      if (v === 'cpu' && !state.cpuResult && state.jobs.length) runCpuLab();
-      if (v === 'memory' && !state.memResult && state.jobs.length) runMemoryLab();
-      if (v === 'disk' && !state.diskResult) runDiskLab();
-    });
+    document.querySelectorAll('.view').forEach((viewEl) => viewEl.classList.remove('active'));
+    const targetView = $('view-' + v);
+    if (targetView) targetView.classList.add('active');
+
+    if (v === 'servers') loadServers();
+    if (v === 'monitoring') loadIncidents();
+    if (v === 'logs') loadLogs();
+    if (v === 'scenarios') loadScenarios();
+    if (v === 'deadlock') renderDeadlockUI();
+    if (v === 'compare' && !state.cmpLoaded) runComparison();
+    if (v === 'cpu' && !state.cpuResult && state.jobs.length) runCpuLab();
+    if (v === 'memory' && !state.memResult && state.jobs.length) runMemoryLab();
+    if (v === 'disk' && !state.diskResult) runDiskLab();
+  }
+
+  document.querySelectorAll('.nav-item').forEach((btn) => {
+    btn.addEventListener('click', () => navigateToView(btn.dataset.view));
+  });
+
+  document.addEventListener('click', (e) => {
+    const navTarget = e.target.closest('[data-nav]');
+    if (navTarget) {
+      e.preventDefault();
+      navigateToView(navTarget.dataset.nav);
+    }
   });
 
   // ----------------------------------------------------------------- Gantt Chart Renderer
@@ -331,16 +343,16 @@
       data: {
         labels: h.map((x) => 't=' + x.time),
         datasets: [
-          { label: 'CPU Utilization %', data: h.map((x) => x.cpuUtilization), borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.12)', fill: true, tension: 0.2, pointRadius: 1 },
-          { label: 'Memory Utilization %', data: h.map((x) => x.memoryUtilization), borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,0.10)', fill: true, tension: 0.2, pointRadius: 1 },
+          { label: 'CPU Utilization %', data: h.map((x) => x.cpuUtilization), borderColor: '#0f62fe', backgroundColor: 'rgba(15, 98, 254, 0.08)', fill: true, tension: 0.2, pointRadius: 1.5 },
+          { label: 'Memory Utilization %', data: h.map((x) => x.memoryUtilization), borderColor: '#198038', backgroundColor: 'rgba(25, 128, 56, 0.08)', fill: true, tension: 0.2, pointRadius: 1.5 },
         ]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } },
+        plugins: { legend: { labels: { color: '#161616', font: { size: 11, family: "'IBM Plex Sans', sans-serif" } } } },
         scales: {
-          x: { ticks: { color: '#64748b', maxTicksLimit: 12 }, grid: { color: 'rgba(148,163,184,0.08)' } },
-          y: { min: 0, max: 100, ticks: { color: '#64748b' }, grid: { color: 'rgba(148,163,184,0.08)' } }
+          x: { ticks: { color: '#525252', maxTicksLimit: 12 }, grid: { color: 'rgba(0, 0, 0, 0.06)' } },
+          y: { min: 0, max: 100, ticks: { color: '#525252' }, grid: { color: 'rgba(0, 0, 0, 0.06)' } }
         }
       }
     });
@@ -835,8 +847,8 @@
     const yOf = (i) => padT + (i / Math.max(1, pts.length - 1)) * (H - padT - padB);
 
     // Cylinder axis ticks
-    ctx.strokeStyle = 'rgba(148,163,184,0.22)';
-    ctx.fillStyle = '#94a3b8';
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.fillStyle = '#525252';
     ctx.font = '11px monospace';
     ctx.beginPath(); ctx.moveTo(padL, padT - 10); ctx.lineTo(W - padR, padT - 10); ctx.stroke();
     for (let k = 0; k <= 5; k++) {
@@ -849,7 +861,7 @@
     // Path lines up to `step`
     ctx.lineWidth = 2.4;
     for (let i = 0; i < step && i < pts.length - 1; i++) {
-      ctx.strokeStyle = '#38bdf8';
+      ctx.strokeStyle = '#0f62fe';
       ctx.beginPath();
       ctx.moveTo(xOf(pts[i]), yOf(i));
       ctx.lineTo(xOf(pts[i + 1]), yOf(i + 1));
@@ -860,9 +872,9 @@
     for (let i = 0; i <= step && i < pts.length; i++) {
       const x = xOf(pts[i]), y = yOf(i);
       const isCur = i === step;
-      ctx.fillStyle = i === 0 ? '#34d399' : (isCur ? '#fbbf24' : '#818cf8');
+      ctx.fillStyle = i === 0 ? '#198038' : (isCur ? '#b28600' : '#0f62fe');
       ctx.beginPath(); ctx.arc(x, y, isCur ? 7 : 4.5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#e2e8f0';
+      ctx.fillStyle = '#161616';
       ctx.fillText(String(pts[i]), x + 8, y + 4);
     }
     $('disk-anim-label').textContent = `Step ${step}/${pts.length - 1} · Head @ ${pts[step]}`;
@@ -1145,7 +1157,7 @@
       if (!from || !to) return;
 
       const isAssignment = e.type === 'assignment'; // Resource -> Process (Holding)
-      ctx.strokeStyle = isAssignment ? '#34d399' : '#fb7185';
+      ctx.strokeStyle = isAssignment ? '#198038' : '#da1e28';
       ctx.lineWidth = isAssignment ? 2 : 1.8;
       if (!isAssignment) ctx.setLineDash([4, 3]);
       else ctx.setLineDash([]);
@@ -1175,29 +1187,29 @@
       if (n.isProc) {
         // Circle for Process
         const inCycle = res?.cycle?.includes(n.pid);
-        ctx.fillStyle = inCycle ? 'rgba(251, 113, 133, 0.3)' : 'rgba(56, 189, 248, 0.25)';
-        ctx.strokeStyle = inCycle ? '#fb7185' : '#38bdf8';
+        ctx.fillStyle = inCycle ? '#fff1f1' : '#edf5ff';
+        ctx.strokeStyle = inCycle ? '#da1e28' : '#0f62fe';
         ctx.lineWidth = inCycle ? 3 : 2;
         ctx.beginPath();
         ctx.arc(n.x, n.y, 20, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = 'bold 10px monospace';
+        ctx.fillStyle = '#161616';
+        ctx.font = 'bold 11px monospace';
         ctx.fillText(`P${n.pid}`, n.x, n.y);
       } else {
         // Square for Resource
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.22)';
-        ctx.strokeStyle = '#fbbf24';
+        ctx.fillStyle = '#fdf5d6';
+        ctx.strokeStyle = '#b28600';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.rect(n.x - 22, n.y - 14, 44, 28);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = 'bold 9.5px sans-serif';
+        ctx.fillStyle = '#161616';
+        ctx.font = 'bold 10px sans-serif';
         ctx.fillText(n.label.slice(0, 7), n.x, n.y);
       }
     });
@@ -1440,10 +1452,10 @@
     $('cmp-chart2-title').textContent = t2;
     const opts = {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } },
+      plugins: { legend: { labels: { color: '#161616', font: { size: 11, family: 'IBM Plex Sans, sans-serif', weight: 500 } } } },
       scales: {
-        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.08)' } },
-        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.08)' } }
+        x: { ticks: { color: '#525252', font: { family: 'IBM Plex Sans, sans-serif' } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+        y: { beginAtZero: true, ticks: { color: '#525252', font: { family: 'IBM Plex Sans, sans-serif' } }, grid: { color: 'rgba(0,0,0,0.06)' } }
       }
     };
     if (state.charts.cmp1) state.charts.cmp1.destroy();

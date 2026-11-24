@@ -8,79 +8,148 @@
   <script src="/vendor/chart.umd.js"></script>
 </head>
 <body>
-  <!-- ==================== SIDEBAR NAVIGATION ==================== -->
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">DC</div>
-      <div>
-        <div class="brand-title">DataCenterOS <span class="brand-tag">ENTERPRISE</span></div>
-        <div class="brand-sub">Virtual Infrastructure &amp; OS Core v2.0</div>
+  <!-- ==================== IBM CARBON CLOUD DASHBOARD HEADER ==================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand-title"><b>DataCenterOS</b> Carbon Cloud Dashboard</div>
+      <div class="topbar-search-wrap">
+        <input type="text" class="topbar-search-input" placeholder="Search resources, pods, nodes..." id="global-search-input" />
+        <span class="topbar-search-icon">🔍</span>
       </div>
     </div>
-
-    <div class="nav-section">Infrastructure Fleet</div>
-    <button class="nav-item active" data-view="overview"><div class="nav-item-left"><span class="nav-dot"></span>Overview Dashboard</div></button>
-    <button class="nav-item" data-view="servers"><div class="nav-item-left"><span class="nav-dot"></span>Server Fleet</div><span class="nav-counter" id="nav-count-servers">3</span></button>
-
-    <div class="nav-section">OS Operations</div>
-    <button class="nav-item" data-view="processes"><div class="nav-item-left"><span class="nav-dot"></span>Process Control</div><span class="nav-counter" id="nav-count-processes">0</span></button>
-    <button class="nav-item" data-view="cpu"><div class="nav-item-left"><span class="nav-dot"></span>CPU Scheduling</div></button>
-    <button class="nav-item" data-view="memory"><div class="nav-item-left"><span class="nav-dot"></span>Memory Allocator</div></button>
-    <button class="nav-item" data-view="disk"><div class="nav-item-left"><span class="nav-dot"></span>Storage &amp; Disk I/O</div></button>
-
-    <div class="nav-section">Concurrency &amp; Safety</div>
-    <button class="nav-item" data-view="sync"><div class="nav-item-left"><span class="nav-dot"></span>Synchronization Lab</div></button>
-    <button class="nav-item" data-view="deadlock"><div class="nav-item-left"><span class="nav-dot"></span>Deadlock Manager</div><span class="nav-counter" id="nav-count-deadlock">RAG</span></button>
-
-    <div class="nav-section">Intelligence &amp; Labs</div>
-    <button class="nav-item" data-view="scenarios"><div class="nav-item-left"><span class="nav-dot"></span>Scenario Lab</div><span class="nav-counter" id="nav-count-scenarios">6</span></button>
-    <button class="nav-item" data-view="monitoring"><div class="nav-item-left"><span class="nav-dot"></span>Incidents &amp; Health</div><span class="nav-counter" id="nav-count-incidents">0</span></button>
-    <button class="nav-item" data-view="analytics"><div class="nav-item-left"><span class="nav-dot"></span>Benchmarking Matrix</div></button>
-    <button class="nav-item" data-view="logs"><div class="nav-item-left"><span class="nav-dot"></span>System Audit Logs</div></button>
-
-    <div class="sidebar-footer">
-      <div id="engine-status" class="engine-pill"><span class="pulse"></span>Connecting C++ Core...</div>
-      <div id="engine-backend" style="font-size:10.5px;line-height:1.35;color:var(--text-muted);">Verifying engine backend...</div>
-      <div id="platform-status-pill" style="margin-top:8px;font-size:11px;color:var(--emerald);display:flex;align-items:center;gap:6px;">
-        <span class="status-dot healthy"></span>Cluster Status: <b id="sidebar-health-text">OPTIMAL</b>
-      </div>
+    <div class="topbar-right">
+      <span class="topbar-status-badge"><span class="status-dot healthy"></span><b>us-east-1</b> (Prod Cluster)</span>
+      <span id="sim-clock" class="clock-badge">t = 0 / 0</span>
+      <button class="topbar-icon-btn" title="Edit">✏️</button>
+      <button class="topbar-icon-btn" title="Alerts &amp; Incidents">🔔</button>
+      <button class="topbar-icon-btn" title="User Profile">👤</button>
     </div>
-  </aside>
+  </header>
 
-  <!-- ==================== MAIN WORKSPACE ==================== -->
-  <div class="main">
-    <!-- Global Simulation Control Bar -->
-    <header class="topbar">
-      <div class="topbar-group">
-        <span class="topbar-status-badge"><span class="status-dot healthy"></span><b>us-east-1</b> (Cluster-Prod)</span>
-        <button id="btn-sim-run" class="btn btn-primary">▶ Run Simulation</button>
-        <button id="btn-sim-pause" class="btn" disabled>⏸ Pause</button>
-        <button id="btn-sim-step" class="btn">⏭ Step</button>
-        <button id="btn-sim-reset" class="btn">↺ Reset</button>
-        <span id="sim-clock" class="clock-badge">t = 0 / 0</span>
-        <input id="sim-scrubber" class="scrubber" type="range" min="0" max="0" value="0" title="Scrub simulation timeline" />
+  <!-- ==================== WORKSPACE LAYOUT (SIDEBAR + MAIN) ==================== -->
+  <div class="workspace">
+    <!-- ==================== SIDEBAR NAVIGATION ==================== -->
+    <aside class="sidebar">
+      <div class="nav-section">Infrastructure Fleet</div>
+      <button class="nav-item active" data-view="overview"><div class="nav-item-left"><span class="nav-dot"></span>Overview Dashboard</div></button>
+      <button class="nav-item" data-view="servers"><div class="nav-item-left"><span class="nav-dot"></span>Server Fleet</div><span class="nav-counter" id="nav-count-servers">3</span></button>
+
+      <div class="nav-section">OS Operations</div>
+      <button class="nav-item" data-view="processes"><div class="nav-item-left"><span class="nav-dot"></span>Process Control</div><span class="nav-counter" id="nav-count-processes">0</span></button>
+      <button class="nav-item" data-view="cpu"><div class="nav-item-left"><span class="nav-dot"></span>CPU Scheduling</div></button>
+      <button class="nav-item" data-view="memory"><div class="nav-item-left"><span class="nav-dot"></span>Memory Allocator</div></button>
+      <button class="nav-item" data-view="disk"><div class="nav-item-left"><span class="nav-dot"></span>Storage &amp; Disk I/O</div></button>
+
+      <div class="nav-section">Concurrency &amp; Safety</div>
+      <button class="nav-item" data-view="sync"><div class="nav-item-left"><span class="nav-dot"></span>Synchronization Lab</div></button>
+      <button class="nav-item" data-view="deadlock"><div class="nav-item-left"><span class="nav-dot"></span>Deadlock Manager</div><span class="nav-counter" id="nav-count-deadlock">RAG</span></button>
+
+      <div class="nav-section">Intelligence &amp; Labs</div>
+      <button class="nav-item" data-view="scenarios"><div class="nav-item-left"><span class="nav-dot"></span>Scenario Lab</div><span class="nav-counter" id="nav-count-scenarios">6</span></button>
+      <button class="nav-item" data-view="monitoring"><div class="nav-item-left"><span class="nav-dot"></span>Incidents &amp; Health</div><span class="nav-counter" id="nav-count-incidents">0</span></button>
+      <button class="nav-item" data-view="analytics"><div class="nav-item-left"><span class="nav-dot"></span>Benchmarking Matrix</div></button>
+      <button class="nav-item" data-view="logs"><div class="nav-item-left"><span class="nav-dot"></span>System Audit Logs</div></button>
+
+      <div class="sidebar-footer">
+        <div id="engine-status" class="engine-pill"><span class="pulse"></span>Connecting C++ Core...</div>
+        <div id="engine-backend" style="font-size:10.5px;line-height:1.35;color:var(--text-muted);">Verifying engine backend...</div>
+        <div id="platform-status-pill" style="margin-top:8px;font-size:11px;color:var(--emerald);display:flex;align-items:center;gap:6px;">
+          <span class="status-dot healthy"></span>Cluster Status: <b id="sidebar-health-text">OPTIMAL</b>
+        </div>
       </div>
+    </aside>
 
-      <div class="topbar-group">
-        <label style="font-size:11.5px;color:var(--text-secondary);display:flex;align-items:center;gap:4px;">Speed
-          <select id="sim-speed" style="padding:4px 8px;">
-            <option value="900">0.5x</option>
-            <option value="450" selected>1.0x</option>
-            <option value="180">2.5x</option>
-            <option value="60">6.0x</option>
+    <!-- ==================== MAIN WORKSPACE ==================== -->
+    <div class="main">
+      <!-- Secondary Simulation Action Toolbar -->
+      <div class="sim-controls-bar">
+        <div class="topbar-group">
+          <button id="btn-sim-run" class="btn btn-primary">▶ Run Simulation</button>
+          <button id="btn-sim-pause" class="btn" disabled>⏸ Pause</button>
+          <button id="btn-sim-step" class="btn">⏭ Step</button>
+          <button id="btn-sim-reset" class="btn">↺ Reset</button>
+          <input id="sim-scrubber" class="scrubber" type="range" min="0" max="0" value="0" title="Scrub simulation timeline" />
+        </div>
+
+        <div class="topbar-group">
+          <label style="font-size:11.5px;color:var(--text-secondary);display:flex;align-items:center;gap:4px;">Speed
+            <select id="sim-speed" style="padding:4px 8px;">
+              <option value="900">0.5x</option>
+              <option value="450" selected>1.0x</option>
+              <option value="180">2.5x</option>
+              <option value="60">6.0x</option>
+            </select>
+          </label>
+          <select id="sample-select" style="padding:5px 9px;">
+            <option value="">Load Workload Preset...</option>
           </select>
-        </label>
-        <select id="sample-select" style="padding:5px 9px;">
-          <option value="">Load Workload Preset...</option>
-        </select>
-        <button id="btn-random-workload" class="btn">🎲 Random</button>
-        <button id="btn-export-report" class="btn">⬇ Export JSON</button>
+          <button id="btn-random-workload" class="btn">🎲 Random</button>
+          <button id="btn-export-report" class="btn">⬇ Export JSON</button>
+        </div>
       </div>
-    </header>
 
     <main class="content">
       <!-- ==================== 1. OVERVIEW DASHBOARD ==================== -->
       <section id="view-overview" class="view active">
+        <!-- IBM Carbon Dashboard Hero Service Catalog Grid (Exact Match to Reference Design) -->
+        <div class="carbon-catalog-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">
+          <div class="panel" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">AI &amp; Workload Intelligence</div>
+              <p style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;">Preemptive CPU scheduling, adaptive priority queueing, and predictive throughput optimization.</p>
+            </div>
+            <button class="carbon-link-btn" data-nav="cpu">Get Started &rarr;</button>
+          </div>
+          <div class="panel" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Infrastructure Fleet</div>
+              <p style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;">Provision virtual host servers, allocate vCPU cores, scale RAM, and simulate node failure &amp; recovery.</p>
+            </div>
+            <button class="carbon-link-btn" data-nav="servers">Get Started &rarr;</button>
+          </div>
+          <div class="panel" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Services &amp; Memory</div>
+              <p style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;">Dynamic partitioned memory allocation (First/Best/Worst/Next Fit), fragmentation telemetry and compacting.</p>
+            </div>
+            <button class="carbon-link-btn" data-nav="memory">Get Started &rarr;</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="carbon-hero-banner blue-gradient" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div class="carbon-hero-title">Smart Grid Workload Engine</div>
+              <div class="carbon-hero-sub">Inject complex production scenarios: simulate CPU spikes, memory exhaustion, race conditions, server outages, and resource contention loops with automated self-healing.</div>
+            </div>
+            <button class="carbon-link-btn carbon-link-btn-light" data-nav="scenarios">Get Started &rarr;</button>
+          </div>
+          <div class="panel" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">Security &amp; Deadlocks</div>
+              <p style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;">Resource Allocation Graph (RAG) analysis, Wait-For-Graph cycle detection, and automated deadlock recovery.</p>
+            </div>
+            <button class="carbon-link-btn" data-nav="deadlock">Get Started &rarr;</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:20px;">
+          <div class="panel" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div style="font-size:18px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">SRE &amp; Incident Alerts</div>
+              <p style="font-size:12.5px;color:var(--text-secondary);line-height:1.5;margin:0;">Track live infrastructure anomalies, severity triage, root-cause diagnostics, and one-click mitigation.</p>
+            </div>
+            <button class="carbon-link-btn" data-nav="monitoring">Get Started &rarr;</button>
+          </div>
+          <div class="carbon-hero-banner dark-gradient" style="margin:0;display:flex;flex-direction:column;justify-content:space-between;min-height:150px;">
+            <div>
+              <div class="carbon-hero-title">Fast Data Transfer &amp; Storage I/O</div>
+              <div class="carbon-hero-sub" style="color:#c6c6c6;">Simulate high-throughput magnetic and NVMe disk scheduling algorithms (SSTF, SCAN, C-SCAN, LOOK, C-LOOK) with real-time head seek animation and total distance reduction.</div>
+            </div>
+            <button class="carbon-link-btn carbon-link-btn-light" data-nav="disk">Get Started &rarr;</button>
+          </div>
+        </div>
+
         <!-- Health Alert Bar -->
         <div id="overview-health-bar" class="health-bar healthy">
           <div style="display:flex;align-items:center;gap:10px;">
@@ -773,6 +842,7 @@
       </section>
     </main>
   </div>
+</div>
 
   <!-- Global Tooltip & Notification Toast -->
   <div id="tooltip" class="tooltip"></div>
