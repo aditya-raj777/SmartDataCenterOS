@@ -49,6 +49,7 @@ WORKDIR /app
 COPY --from=builder /build/bin/dc_sim ./bin/dc_sim
 COPY server ./server
 COPY frontend ./frontend
+COPY data ./data
 COPY package.json ./package.json
 
 ENV NODE_ENV=production
